@@ -36,58 +36,7 @@ export const signupService = catchAsync(async (req, res, next) => {
       message: "user already exist"
     });
   }else if(created) {
-    // send email logic 
-    const verifyLink = process.env.RootUrl + "/api/v1/auth/verifyEmail/"+client.id
-    var transporter = nodemailer.createTransport({
-      host: 'mail.ewenet.net',
-      port: 465,
-      secure: true, // true for 465, false for other ports
-      auth: {
-        user: 'noreply@ewenet.net', // your domain email address
-        pass: 'R{Mklpm~?oK]@aFxq*' // your password
-      }
-    });
-    transporter.use(
-      "compile",
-      hbs({
-        viewEngine: {
-          extName: ".hbs",
-          partialsDir: "./src/views",
-          layoutsDir: "./src/views",
-          defaultLayout: "",
-        },
-        viewPath: "./src/views/",
-        extName: ".hbs",
-      })
-    );
-  
-    var mailOptions = {
-      from: '"no reply" <noreply@ewenet.net>',
-      to: client.email,
-      subject: "Confirm your email address",
-      template: "emailConfirmation",
-      context: {
-        UserName: client.f_name,
-        ConfirmUrl: verifyLink,
-      },
-    };
-
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        return next(
-          new GlobalError(
-            "error occur when sending the email:: "+error,
-            500
-          )
-        );
-      } else { 
-        return res.status(201).json({
-          status: "success",
-          message: "client successfully created",
-          payload: _.omit(client.toJSON(), ["password"])
-        });
-      }
-    });
+    // send email logic
     
   }
 }catch(err) {
