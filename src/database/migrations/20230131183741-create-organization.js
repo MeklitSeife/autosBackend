@@ -31,9 +31,6 @@ module.exports = {
       profile_pic: {
         type:DataTypes.ARRAY(DataTypes.STRING),
       },
-      cover_pic: {
-        type:DataTypes.ARRAY(DataTypes.STRING),
-      },
       no_of_follower: {
         type: DataTypes.INTEGER,
         defaultValue:'0'
@@ -46,7 +43,7 @@ module.exports = {
         type:DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false,
       },
-      is_verified: {
+      is_lisence_verified: {
         type: DataTypes.BOOLEAN,
         defaultValue:false
       },
@@ -57,10 +54,6 @@ module.exports = {
       no_of_report: {
         type: DataTypes.INTEGER,
         defaultValue:'0'
-      },
-      is_blocked: {
-        type: DataTypes.BOOLEAN,
-        defaultValue:false
       },
       createdAt: {
         allowNull: false,

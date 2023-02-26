@@ -1,6 +1,6 @@
 'use strict';
 const {
-  Model
+  Model, INTEGER
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -24,26 +24,12 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    user_name: {
-      type: DataTypes.STRING,
-      allowNull:false,
-      unique:true
-    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
       unique:true
     },
-    phone_no: {
-      type:DataTypes.STRING,
-      allowNull:false,
-      unique:true
-     },
     password:{
-      type:DataTypes.STRING,
-      allowNull:false
-     },
-    confirm_password: {
       type:DataTypes.STRING,
       allowNull:false
      },
@@ -51,12 +37,23 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM("Parent","Organization","Health_professional","Admin","Moderator"),
       allowNull:false
     },
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    otp: {
+      type:DataTypes.INTEGER
+    },
+    is_verified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     reset_pass_token_key:{
       type: DataTypes.STRING,
     }
   }, {
     sequelize,
-    tableName:'users',
+   // tableName:'users',
     modelName: 'User',
   });
   return User;

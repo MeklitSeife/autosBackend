@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     post_img:{
-      type: DataTypes.ARRAY
+      type: DataTypes.ARRAY(DataTypes.STRING)
     },
     is_reported: {
       type: DataTypes.BOOLEAN,

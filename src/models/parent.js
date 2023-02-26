@@ -1,6 +1,6 @@
 'use strict';
 const {
-  Model
+  Model, BOOLEAN
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Parent extends Model {
@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(User, {foreignKey:'user_id', as:'parent'});
       this.hasMany(Child, { foreignKey: "parent_id", as: "child" });
       this.hasMany(Post, { foreignKey: "posting_user_id", as: "posting_parent" });
-      this.hasMany(Followers, { foreignKey: "follower_user_id", as: "follower_parent"});
       this.hasMany(Post_comment, { foreignKey: "commentor_id", as: "commentor_parent"});
       this.hasMany(Reported_comment, { foreignKey: "reporting_user_id", as: "comment_reporter_parent"});
       this.hasMany(Reported_post, { foreignKey: "reporting_user_id", as: "post_reporter_parent"});
@@ -52,10 +51,7 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.STRING
     },
     profile_pic:{
-      type:DataTypes.ARRAY
-    },
-    cover_pic: {
-      type:DataTypes.ARRAY
+      type:DataTypes.ARRAY(DataTypes.STRING)
     },
     no_of_follower:{
       type: DataTypes.INTEGER,
@@ -72,10 +68,6 @@ module.exports = (sequelize, DataTypes) => {
     no_of_report:{
       type: DataTypes.INTEGER,
       defaultValue:'0'
-    },
-    is_blocked: {
-      type: DataTypes.BOOLEAN,
-      defaultValue:false
     },
   }, {
     sequelize,

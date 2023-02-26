@@ -9,11 +9,11 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({User, Post, Followers, Post_comment, Reported_comment,Reported_post,User_warning}) {
+    static associate({User, Post, User_follows, Post_comment, Reported_comment,Reported_post,User_warning}) {
       // define association here
       this.belongsTo(User, {foreignKey:'user_id', as:'organization'});
       this.hasMany(Post, { foreignKey: "posting_user_id", as: "posting_organization"});
-      this.hasMany(Followers, { foreignKey: "follower_user_id", as: "follower_organization"});
+      this.hasMany(User_follows, { foreignKey: "follower_user_id", as: "follower_organization"});
       this.hasMany(Post_comment, { foreignKey: "commentor_id", as: "commentor_organization"});
       this.hasMany(Reported_comment, { foreignKey: "reporting_user_id", as: "comment_reporter_organization"});
       this.hasMany(Reported_post, { foreignKey: "reporting_user_id", as: "post_reporter_organization"});
@@ -47,10 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     profile_pic: {
-      type: DataTypes.ARRAY
-    },
-    cover_pic:{
-      type: DataTypes.ARRAY
+      type: DataTypes.ARRAY(DataTypes.STRING)
     },
     no_of_follower:{
       type: DataTypes.INTEGER,
@@ -61,10 +58,10 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue:'0'
     },
     lisence: {
-      type: DataTypes.ARRAY,
+      type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull:false
     },
-    is_verified: {
+    is_lisence_verified: {
       type: DataTypes.BOOLEAN,
       defaultValue:false
     },
@@ -75,11 +72,7 @@ module.exports = (sequelize, DataTypes) => {
     no_of_report:{
       type: DataTypes.INTEGER,
       defaultValue:'0'
-    },
-    is_blocked: {
-      type: DataTypes.BOOLEAN,
-      defaultValue:false
-    },
+    }
   }, {
     sequelize,
     tableName:'organizations',

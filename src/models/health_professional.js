@@ -13,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(User, {foreignKey:'user_id', as:'health_professional'});
       this.hasMany(Post, { foreignKey: "posting_user_id", as: "posting_health_professional"});
-      this.hasMany(Followers, { foreignKey: "follower_user_id", as: "follower_health_professional"});
       this.hasMany(Post_comment, { foreignKey: "commentor_id", as: "commentor_health_professional"});
       this.hasMany(Reported_comment, { foreignKey: "reporting_user_id", as: "comment_reporter_health_professional"});
       this.hasMany(User_warning, { foreignKey: "warned_user_id", as: "warned_health_professional"});
@@ -47,10 +46,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     profile_pic: {
-      type: DataTypes.ARRAY
-    },
-    cover_pic:  {
-      type: DataTypes.ARRAY
+      type: DataTypes.ARRAY(DataTypes.STRING)
     },
     no_of_follower:{
       type: DataTypes.INTEGER,
@@ -61,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue:'0'
     },
     lisence: {
-      type: DataTypes.ARRAY,
+      type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull:false
     },
     experience: {
@@ -70,7 +66,7 @@ module.exports = (sequelize, DataTypes) => {
     working_place:  {
       type: DataTypes.STRING
     },
-    is_verified: {
+    is_lisence_verified: {
       type: DataTypes.BOOLEAN,
       defaultValue:false
     },
@@ -81,11 +77,7 @@ module.exports = (sequelize, DataTypes) => {
     no_of_report:{
       type: DataTypes.INTEGER,
       defaultValue:'0'
-    },
-    is_blocked: {
-      type: DataTypes.BOOLEAN,
-      defaultValue:false
-    },
+    }
   }, {
     sequelize,
     tableName:'health_professionals',
