@@ -49,7 +49,6 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     sequelize,
-    tableName:'childs',
     modelName: 'Child',
   });
   return Child;

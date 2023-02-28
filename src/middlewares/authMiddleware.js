@@ -46,6 +46,7 @@ export const signinAuth = async (req, res, next) => {
         )
       );
     }  
+    console.log(userAcc.toJSON())
     req.user = userAcc.toJSON();
     next();
   }catch(err) {

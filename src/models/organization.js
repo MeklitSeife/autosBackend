@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     user_id:{
       type: DataTypes.UUID,
+      unique:true,
       allowNull:false
     },
     organization_name: {
@@ -75,7 +76,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    tableName:'organizations',
     modelName: 'Organization',
   });
   return Organization;

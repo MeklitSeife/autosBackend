@@ -1,8 +1,6 @@
 import jwt from "jsonwebtoken";
-import { promisify } from "util";
 import _ from "lodash";
 import { findByPk } from "../helpers";
-import Model from "../models";
 import GlobalError from "../lib/catchAsync";
 
 
@@ -27,20 +25,6 @@ export const createTokens = (payload, refreshSecret) => {
 
   return [token, refreshToken];
 };
-export const createInfluencerTokens = (payload, refreshSecret) => {
-  const token = createToken(
-    payload,
-    process.env.JWT_SECRET_KEY_INFLUENCER,
-    `${process.env.JWT_ACCESS_TOKEN_EXPIRES}`
-  );
-  const refreshToken = createToken(
-    payload,
-    refreshSecret,
-    `${process.env.JWT_REFRESH_TOKEN_EXPIRES}`
-  );
-
-  return [token, refreshToken];
-};
 
 export const verifyResetToken = (token) =>
   jwt.verify(token,process.env.JWT_RESET_KEY);
@@ -48,9 +32,6 @@ export const verifyResetToken = (token) =>
 export const jwtVerifyToken = token =>
   jwt.verify(token, `${process.env.JWT_SECRET_KEY}`);
   
-export const jwtVerifyTokenInfluencer = token =>
-  jwt.verify(token, `${process.env.JWT_SECRET_KEY_INFLUENCER}`);
-
 export const refreshToken = async (__rt, next) => {
   const decoded = jwt.decode(__rt);
 
@@ -60,7 +41,7 @@ export const refreshToken = async (__rt, next) => {
   const freshClient = await findByPk(Clients, decoded.id);
 
   if (!freshClient) {
-    return next(new GlobalError("client does not exist", 401));
+    return next(new GlobalError("user does not exist", 401));
   }
 
   const refreshSecret =

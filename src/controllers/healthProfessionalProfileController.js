@@ -4,26 +4,27 @@ import Model from "../models";
 import { validationResult } from "express-validator";
 import GlobalError from "../lib/globalError";
 
-const { Organization } = Model;
+const { Health_professional } = Model;
 
-//create organization profile
-var createOrganizationProfile = catchAsync(async (req, res, next) => {
+//create HealthProfessional profile
+var createHealthProfessionalProfile = catchAsync(async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(422).json({ errors: errors.array() });
       return;
+     }
+    const healthProfessionalProfile = await findProfileById(Health_professional,req.user.id);
+    if (healthProfessionalProfile) {
+      return next(new GlobalError("Health Professional profile already exist", 401));
     }
 
-    const organizationProfile = await findProfileById(Organization,req.user.id);
-    if (organizationProfile) {
-      return next(new GlobalError("organization profile already exist", 401));
-    }
-
-    const createProfile = await Organization.create({
-      "organization_name": req.body.organization_name,
-      "address": req.body.address,
-      "starting_year": req.body.starting_year,
+    const createProfile = await Health_professional.create({
+      "first_name": req.body.first_name,
+      "last_name": req.body.last_name,
+      "gender": req.body.gender,
+      "working_place": req.body.working_place,
+      "experience": req.body.experience,
       "bio": req.body.bio,
       "profile_pic": [req.body.profile_pic],
       "lisence": [req.body.lisence],
@@ -32,7 +33,7 @@ var createOrganizationProfile = catchAsync(async (req, res, next) => {
     if (createProfile) {
       return res.status(201).json({
         status: "success",
-        message: "organization profile successfully created",
+        message: "Health professional profile successfully created",
         payload: createProfile
       });
     }
@@ -41,9 +42,9 @@ var createOrganizationProfile = catchAsync(async (req, res, next) => {
   }
 });
 
-//read organization profile(by profile owner organization)
-var readOrganizationProfile = catchAsync(async (req, res, next) => {
-  const readProfile = await findProfileById(Organization, req.user.id);
+//read HealthProfessional profile(by profile owner HealthProfessional)
+var readHealthProfessionalProfile = catchAsync(async (req, res, next) => {
+  const readProfile = await findProfileById(Health_professional, req.user.id);
   if (readProfile) {
     const profile = readProfile.toJSON()
     res.status(200).json({
@@ -54,21 +55,21 @@ var readOrganizationProfile = catchAsync(async (req, res, next) => {
   }
 });
 
-//read specific organization profile(by other users)
-var readOrganizationProfileByOthers = catchAsync(async (req, res, next) => {
-  const readProfile = await findProfileById(Organization, req.query.id);
-  if (readProfile) {
-    const profile = readProfile.toJSON()
-    res.status(200).json({
-      profile
-          });
-  } else {
-    return next(new GlobalError("error profile does not exist!", 400));
-  }
-});
+//read specific HealthProfessional profile(by other users)
+var readHealthProfessionalProfileByOthers = catchAsync(async (req, res, next) => {
+    const readProfile = await findProfileById(Health_professional, req.query.id);
+    if (readProfile) {
+      const profile = readProfile.toJSON()
+      res.status(200).json({
+        profile
+            });
+    } else {
+      return next(new GlobalError("error profile does not exist!", 400));
+    }
+  });
 
-//update organization profile
-var updateOrganizationProfile = catchAsync(async (req, res, next) => {
+//update HealthProfessional profile
+var updateHealthProfessionalProfile = catchAsync(async (req, res, next) => {
   try{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -76,11 +77,13 @@ var updateOrganizationProfile = catchAsync(async (req, res, next) => {
       return;
     }
 
- const updateProfile = await Organization.update(
+ const updateProfile = await Health_professional.update(
     {
-      "organization_name": req.body.organization_name,
-      "address": req.body.address,
-      "starting_year": req.body.starting_year,
+      "first_name": req.body.first_name,
+      "last_name": req.body.last_name,
+      "gender": req.body.gender,
+      "working_place": req.body.working_place,
+      "experience": req.body.experience,
       "bio": req.body.bio,
     },
     {
@@ -102,7 +105,7 @@ var updateOrganizationProfile = catchAsync(async (req, res, next) => {
 });
 
 //resend lisence
-var updateOrganizationLisence = catchAsync(async (req, res, next) => {
+var updateHealthProfessionalLisence = catchAsync(async (req, res, next) => {
   try{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -110,7 +113,7 @@ var updateOrganizationLisence = catchAsync(async (req, res, next) => {
       return;
     }
 
- const updateLisence = await Organization.update(
+ const updateLisence = await Health_professional.update(
     {
       "lisence": [req.body.lisence],
     },
@@ -131,19 +134,19 @@ var updateOrganizationLisence = catchAsync(async (req, res, next) => {
     return next(err);
   }
 });
-//update organization profile picture
-var updateOrganizationProfilePic = catchAsync(async (req, res, next) => {
+//update HealthProfessional profile picture
+var updateHealthProfessionalProfilePic = catchAsync(async (req, res, next) => {
   try{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(422).json({ errors: errors.array() });
       return;
     }
-const profile = await findProfileById(Organization, req.user.id);
+const profile = await findProfileById(Health_professional, req.user.id);
 var picture = profile.profile_pic
 picture.push(req.body.profile_pic)
 
- const updateProfilePic = await Organization.update(
+ const updateProfilePic = await Health_professional.update(
     {
       "profile_pic":picture,
       },
@@ -164,9 +167,9 @@ picture.push(req.body.profile_pic)
     return next(err);
   }
 });
-//delete organization profile
-var removeOrganizationProfile = catchAsync(async (req, res, next) => {
-  const removeProfile = await Organization.destroy(
+//delete HealthProfessional profile
+var removeHealthProfessionalProfile = catchAsync(async (req, res, next) => {
+  const removeProfile = await Health_professional.destroy(
     { 
       where: { user_id:req.user.id }
     })
@@ -179,11 +182,11 @@ var removeOrganizationProfile = catchAsync(async (req, res, next) => {
   }
 });
 module.exports = {
-    createOrganizationProfile: createOrganizationProfile,
-    readOrganizationProfile: readOrganizationProfile,
-    readOrganizationProfileByOthers:readOrganizationProfileByOthers,
-    removeOrganizationProfile:removeOrganizationProfile,
-    updateOrganizationProfile:updateOrganizationProfile,
-    updateOrganizationLisence:updateOrganizationLisence,
-    updateOrganizationProfilePic:updateOrganizationProfilePic 
+    createHealthProfessionalProfile: createHealthProfessionalProfile,
+    readHealthProfessionalProfile: readHealthProfessionalProfile,
+    readHealthProfessionalProfileByOthers:readHealthProfessionalProfileByOthers,
+    removeHealthProfessionalProfile:removeHealthProfessionalProfile,
+    updateHealthProfessionalProfile:updateHealthProfessionalProfile,
+    updateHealthProfessionalLisence:updateHealthProfessionalLisence,
+    updateHealthProfessionalProfilePic:updateHealthProfessionalProfilePic 
 };

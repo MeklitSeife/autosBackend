@@ -1,9 +1,9 @@
 import GlobalError from "../lib/globalError";
-import { jwtVerifyTokenInfluencer, refreshToken } from "../lib/generateToken";
+import { jwtVerifyToken, refreshToken } from "../lib/generateToken";
 import catchAsync from "../lib/catchAsync";
 import Model from "../models";
 
-const { Influencer ,Influencer_profile} = Model;
+const { User ,Organization, Health_professional, Parent} = Model;
 
 export const verifyToken = catchAsync(async (req, res, next) => {
 
@@ -12,28 +12,24 @@ export const verifyToken = catchAsync(async (req, res, next) => {
     return next(new GlobalError("You are not logged in", 401));
   }
   try {
-    const decoded = await jwtVerifyTokenInfluencer(token);
+    const decoded = await jwtVerifyToken(token);
     if (!decoded.is_active) {
       return next(
         new GlobalError(
-          "influencer has been blocked, contact system administrator ",
+          "user has been blocked, contact system administrator ",
           401
         )
       );
     }
-    const influencer = await Influencer.findOne({
+    const userAcc = await User.findOne({
       where:{
         id:decoded.id
       },
-      include: {
-        model: Influencer_profile,
-        as: 'profile'
-      },
     });
-    if (!influencer) {
-      return next(new GlobalError("influencer does not exist!", 400));
+    if (!userAcc) {
+      return next(new GlobalError("user does not exist!", 400));
         }
-      req.influencer = influencer.toJSON();
+      req.user = userAcc.toJSON();
       next();
   } catch (err) {
     console.log(err.stack);

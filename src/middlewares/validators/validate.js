@@ -1,6 +1,6 @@
 import { body,param,query,oneOf} from "express-validator"
-import { findUserByEmail } from "../helpers/index";
-import Model from "../models";
+import { findUserByEmail } from "../../helpers/index";
+import Model from "../../models";
 exports.validate = (method) => {
     
   const { User } = Model;
@@ -21,9 +21,9 @@ exports.validate = (method) => {
            .matches(/(?=.*?[A-Z])/).withMessage('At least one Uppercase')
            .matches(/(?=.*?[a-z])/).withMessage('At least one Lowercase')
            .matches(/(?=.*?[0-9])/).withMessage('At least one Number')
-           .matches(/(?=.*?[#?!@$%^&*-])/).withMessage('At least one special character')
+           .matches(/(?=.*?[#?!@$%^&*-_])/).withMessage('At least one special character')
            .not().matches(/^$|\s+/).withMessage('White space not allowed'),
-           body('user_type').notEmpty().withMessage('user type is required')
+           body('user_type').notEmpty().isIn(["Parent", "Organization","Health_professional"]).withMessage('user type is required')
            ] 
         }
     case 'signin': {
@@ -55,6 +55,6 @@ exports.validate = (method) => {
         .not().matches(/^$|\s+/).withMessage('White space not allowed'),  
       ]
    }
-    
+   
   }
 }

@@ -38,7 +38,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    tableName:'post_comments',
     modelName: 'Post_comment',
   });
   return Post_comment;

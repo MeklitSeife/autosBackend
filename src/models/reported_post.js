@@ -40,7 +40,6 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     sequelize,
-    tableName:'reported_posts',
     modelName: 'Reported_post',
   });
   return Reported_post;

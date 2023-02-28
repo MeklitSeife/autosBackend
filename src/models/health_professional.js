@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     user_id: {
       type: DataTypes.UUID,
+      unique:true,
       allowNull:false
     },
     first_name: {
@@ -48,14 +49,6 @@ module.exports = (sequelize, DataTypes) => {
     profile_pic: {
       type: DataTypes.ARRAY(DataTypes.STRING)
     },
-    no_of_follower:{
-      type: DataTypes.INTEGER,
-      defaultValue:'0'
-    },
-    no_of_following: {
-      type: DataTypes.INTEGER,
-      defaultValue:'0'
-    },
     lisence: {
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull:false
@@ -70,6 +63,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue:false
     },
+    no_of_follower:{
+      type: DataTypes.INTEGER,
+      defaultValue:'0'
+    },
+    no_of_following: {
+      type: DataTypes.INTEGER,
+      defaultValue:'0'
+    },
     is_reported: {
       type: DataTypes.BOOLEAN,
       defaultValue:false
@@ -80,7 +81,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    tableName:'health_professionals',
     modelName: 'Health_professional',
   });
   return Health_professional;

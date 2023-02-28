@@ -13,6 +13,7 @@ export const signupController = catchAsync(async (req, res, next) => {
 });
 
 export const emailVerificationController = catchAsync(async (req, res, next) => {
+  console.log(req.bod,req.body.otp, req.query.id)
   try {
     const errors = validationResult(req); 
 
