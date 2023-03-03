@@ -25,7 +25,20 @@ export const verifyToken = catchAsync(async (req, res, next) => {
       where:{
         id:decoded.id
       },
+      include:[{
+        model: Organization ,
+        as: 'organization', 
+    },
+    {
+        model: Parent ,
+        as: 'parent', 
+    },
+    {
+      model: Health_professional ,
+      as: 'health_professional', 
+  }]
     });
+    console.log(userAcc)
     if (!userAcc) {
       return next(new GlobalError("user does not exist!", 400));
         }

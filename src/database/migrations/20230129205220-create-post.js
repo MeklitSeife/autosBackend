@@ -17,7 +17,15 @@ module.exports = {
         type: DataTypes.STRING
       },
       post_img: {
-        type:DataTypes.ARRAY(DataTypes.STRING),
+        type:DataTypes.STRING,
+      },
+      no_of_likes:{
+        type: DataTypes.INTEGER,
+        defaultValue:'0'
+      },
+      no_of_comments:{
+         type: DataTypes.INTEGER,
+         defaultValue:'0'
       },
       is_reported: {
         type: DataTypes.BOOLEAN,

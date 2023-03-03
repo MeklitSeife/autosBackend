@@ -9,12 +9,14 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({Parent, Organization, Health_professional,Post_comment, Reported_post}) {
+    static associate({Parent,User, Organization, Health_professional,Post_comment, Reported_post}) {
       // define association here
-      this.belongsTo(Parent, {foreignKey:'posting_user_id', as:'posting_parent'});
-      this.belongsTo(Organization, {foreignKey:'posting_user_id', as:'posting_organization'});
-      this.belongsTo(Health_professional, {foreignKey:'posting_user_id', as:'posting_health_professional'});
-      this.hasMany(Post_comment, { foreignKey: "post_id", as: "commnet"});
+      
+      this.belongsTo(User, {foreignKey:'posting_user_id', as:'posting_user'});
+      //this.belongsTo(Parent, {foreignKey:'posting_user_id', as:'posting_parent'});
+      //this.belongsTo(Organization, {foreignKey:'posting_user_id', as:'posting_organization'});
+      //this.belongsTo(Health_professional, {foreignKey:'posting_user_id', as:'posting_health_professional'});
+      this.hasMany(Post_comment, { foreignKey: "post_id", as: "comment"});
       this.hasMany(Reported_post, { foreignKey: "reported_post_id", as: "reported_post"});    
     }
   }
@@ -32,7 +34,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     post_img:{
-      type: DataTypes.ARRAY(DataTypes.STRING)
+      type: DataTypes.STRING
+    },
+    no_of_likes:{
+      type: DataTypes.INTEGER,
+      defaultValue:'0'
+    },
+    no_of_comments:{
+       type: DataTypes.INTEGER,
+       defaultValue:'0'
     },
     is_reported: {
       type: DataTypes.BOOLEAN,

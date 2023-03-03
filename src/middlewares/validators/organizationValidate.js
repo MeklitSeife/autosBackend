@@ -9,7 +9,7 @@ exports.validate = (method) => {
               body('organization_name').notEmpty().withMessage('organization name is required'),
               body('address').notEmpty().withMessage('address is required'),
               body('starting_year').notEmpty().withMessage('starting year is required'),
-              body('lisence').notEmpty().withMessage('lisence is required'),
+              body('lisence_base64').notEmpty().withMessage('lisence is required'),
             ] 
            }
            case 'readOrganizationProfile': {
@@ -28,7 +28,7 @@ exports.validate = (method) => {
            }
            case 'updateOrganizationLisence': {
             return [
-              body('lisence').notEmpty().withMessage('lisence is required'),
+              body('base64').notEmpty().withMessage('lisence is required'),
             ] 
            }
            case 'updateOrganizationProfilePic': {

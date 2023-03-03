@@ -14,18 +14,6 @@ export const findOrCreate = (model, payload) =>
       }
     });
 
-  // export const createOrUpdateInfulencer = async (model, payload) => {
-  //   const obj = await model
-  //       .findOne({
-  //         where: { tiktok_id : payload.tiktok_id }
-  //       })
-  //     if (obj) {
-  //   return obj.update(payload)
-  //     }
-  //   return model.create(payload)
-
-  // }
-
 export const findUser = (model, payload) =>
   model.findOne({
     where: {
@@ -54,12 +42,12 @@ export const findUserById= (model, clientId) =>
     },
   });
 
-// export const findAllClientContest= (model, clientId) =>
-//   model.findAll({
-//     where: {
-//       clientId: clientId
-//     },
-//       });
+ export const findAllMyPost= (model, id) =>
+   model.findAll({
+     where: {
+      posting_user_id: id
+     },
+       });
   
 
 

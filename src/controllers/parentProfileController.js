@@ -3,11 +3,21 @@ import { findProfileById } from "../helpers/index";
 import Model from "../models";
 import { validationResult } from "express-validator";
 import GlobalError from "../lib/globalError";
+import imagebbUploader from "imgbb-uploader";
 
 const { Parent } = Model;
 
+
 //create parent profile
 var createParentProfile = catchAsync(async (req, res, next) => {
+
+  const options = {
+    apiKey: '3e587f3c960a3473c6996fb07d2a3766',
+    name: 'filename',
+    base64string: req.body.base64
+  }
+ 
+
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -15,19 +25,22 @@ var createParentProfile = catchAsync(async (req, res, next) => {
       return;
     }
 
-    const parentProfile = await findProfileById(Parent,req.user.id);
+    imagebbUploader(options).then(async respon => {
+      
+    const parentProfile = await findProfileById(Parent,req.query.id);
     if (parentProfile) {
       return next(new GlobalError("parent profile already exist", 401));
     }
+
 
     const createProfile = await Parent.create({
       "first_name": req.body.first_name,
       "last_name": req.body.last_name,
       "gender": req.body.gender,
       "relation": req.body.relation,
-      "profile_pic": [req.body.profile_pic],
+      "profile_pic": respon.url,
       "bio": req.body.bio,
-      "user_id":req.user.id
+      "user_id":req.query.id
     })
     if (createProfile) {
       return res.status(201).json({
@@ -36,6 +49,12 @@ var createParentProfile = catchAsync(async (req, res, next) => {
         payload: createProfile
       });
     }
+    }).catch(err => {
+      console.log('err', err);
+    })
+
+
+
   } catch (err) {
     return next(err);
   }
@@ -85,7 +104,7 @@ var updateParentProfile = catchAsync(async (req, res, next) => {
     "bio": req.body.bio,
     },
     {
-      where: { user_id:req.user.id},
+      where: { user_id:req.query.id},
     }
   )
   if (updateProfile) {
@@ -104,24 +123,28 @@ var updateParentProfile = catchAsync(async (req, res, next) => {
 
 //update parent profile picture
 var updateParentProfilePic = catchAsync(async (req, res, next) => {
+
+
+  const options = {
+    apiKey: '3e587f3c960a3473c6996fb07d2a3766',
+    name: 'filename',
+    base64string: req.body.base64
+  }
+
   try{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(422).json({ errors: errors.array() });
       return;
     }
-const profile = await findProfileById(Parent, req.user.id);
-var picture = profile.profile_pic
-picture.push(req.body.profile_pic)
 
- const updateProfilePic = await Parent.update(
-    {
-      "profile_pic":picture,
-      },
-    {
-      where: { user_id:req.user.id},
-    }
-  )
+    imagebbUploader(options).then(async respon => {
+
+const profile = await findProfileById(Parent, req.query.id);
+
+profile.profile_pic = respon.url;
+const updateProfilePic = await profile.save();
+  
   if (updateProfilePic) { 
     res.status(200).json({
       msg:"succesfully updated your profile picture",
@@ -130,8 +153,12 @@ picture.push(req.body.profile_pic)
   } else {
     return next(
       new GlobalError("error occured when updating your profile picture!", 400)
-    );
-  }} catch (err) {
+    );}
+}).catch(err => {
+  console.log('err', err);
+
+
+})} catch (err) {
     return next(err);
   }
 });
@@ -139,7 +166,7 @@ picture.push(req.body.profile_pic)
 var removeParentProfile = catchAsync(async (req, res, next) => {
   const removeProfile = await Parent.destroy(
     { 
-      where: { user_id:req.user.id }
+      where: { user_id:req.query.id }
     })
   if (removeProfile) {
     res.status(200).send("successefully deleted your profile");

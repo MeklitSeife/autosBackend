@@ -9,14 +9,16 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({User, Followers, Post, Post_comment, Reported_comment,Reported_post,User_warning}) {
+    static associate({User, Followers, Verification_request,Post, Post_comment, Reported_comment,Reported_post,User_warning}) {
       // define association here
       this.belongsTo(User, {foreignKey:'user_id', as:'health_professional'});
       this.hasMany(Post, { foreignKey: "posting_user_id", as: "posting_health_professional"});
-      this.hasMany(Post_comment, { foreignKey: "commentor_id", as: "commentor_health_professional"});
-      this.hasMany(Reported_comment, { foreignKey: "reporting_user_id", as: "comment_reporter_health_professional"});
+      //this.hasMany(Post_comment, { foreignKey: "commentor_id", as: "commentor_health_professional"});
+      //this.hasMany(Reported_comment, { foreignKey: "reporting_user_id", as: "comment_reporter_health_professional"});
       this.hasMany(User_warning, { foreignKey: "warned_user_id", as: "warned_health_professional"});
       this.hasMany(Reported_post, { foreignKey: "reporting_user_id", as: "post_reporter_health_professional"});
+      this.hasMany(Verification_request, { foreignKey: "requestor_id", as: "health_professional_verification"});
+      
 
     }
   }
@@ -47,10 +49,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     profile_pic: {
-      type: DataTypes.ARRAY(DataTypes.STRING)
+      type: DataTypes.STRING
     },
     lisence: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+      type: DataTypes.STRING,
       allowNull:false
     },
     experience: {

@@ -43,7 +43,7 @@ export const signupService = catchAsync(async (req, res, next) => {
          'X-RapidAPI-Key': 'ae5381ecc8msh0f57ec82fa1bea2p1bb060jsn95500a02d0b4',
          'X-RapidAPI-Host': 'rapidprod-sendgrid-v1.p.rapidapi.com'
        },
-       data: `{"personalizations":[{"to":[{"email":"${userAcc.email}"}],"subject":"invitation code"}],"from":{"email":"jobtennis21@gmail.com"},"content":[{"type":"text/plain","value":"here is your invitation code:${otp}"}]}`,
+       data: `{"personalizations":[{"to":[{"email":"${userAcc.email}"}],"subject":"invitation code"}],"from":{"email":"noreplyautos17@gmail.com"},"content":[{"type":"text/plain","value":"here is your invitation code:${otp}"}]}`,
       };
       axios.request(options).then(function (response) {
         return res.status(201).json({

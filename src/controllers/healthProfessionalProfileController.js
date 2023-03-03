@@ -14,7 +14,7 @@ var createHealthProfessionalProfile = catchAsync(async (req, res, next) => {
       res.status(422).json({ errors: errors.array() });
       return;
      }
-    const healthProfessionalProfile = await findProfileById(Health_professional,req.user.id);
+    const healthProfessionalProfile = await findProfileById(Health_professional,req.query.id);
     if (healthProfessionalProfile) {
       return next(new GlobalError("Health Professional profile already exist", 401));
     }
@@ -28,7 +28,7 @@ var createHealthProfessionalProfile = catchAsync(async (req, res, next) => {
       "bio": req.body.bio,
       "profile_pic": [req.body.profile_pic],
       "lisence": [req.body.lisence],
-      "user_id":req.user.id
+      "user_id":req.query.id
     })
     if (createProfile) {
       return res.status(201).json({
@@ -44,7 +44,7 @@ var createHealthProfessionalProfile = catchAsync(async (req, res, next) => {
 
 //read HealthProfessional profile(by profile owner HealthProfessional)
 var readHealthProfessionalProfile = catchAsync(async (req, res, next) => {
-  const readProfile = await findProfileById(Health_professional, req.user.id);
+  const readProfile = await findProfileById(Health_professional, req.query.id);
   if (readProfile) {
     const profile = readProfile.toJSON()
     res.status(200).json({
@@ -87,7 +87,7 @@ var updateHealthProfessionalProfile = catchAsync(async (req, res, next) => {
       "bio": req.body.bio,
     },
     {
-      where: { user_id:req.user.id},
+      where: { user_id:req.query.id},
     }
   )
   if (updateProfile) {
@@ -118,7 +118,7 @@ var updateHealthProfessionalLisence = catchAsync(async (req, res, next) => {
       "lisence": [req.body.lisence],
     },
     {
-      where: { user_id:req.user.id},
+      where: { user_id:req.query.id},
     }
   )
   if (updateLisence) {
@@ -142,7 +142,7 @@ var updateHealthProfessionalProfilePic = catchAsync(async (req, res, next) => {
       res.status(422).json({ errors: errors.array() });
       return;
     }
-const profile = await findProfileById(Health_professional, req.user.id);
+const profile = await findProfileById(Health_professional, req.query.id);
 var picture = profile.profile_pic
 picture.push(req.body.profile_pic)
 
@@ -151,7 +151,7 @@ picture.push(req.body.profile_pic)
       "profile_pic":picture,
       },
     {
-      where: { user_id:req.user.id},
+      where: { user_id:req.query.id},
     }
   )
   if (updateProfilePic) { 
@@ -171,7 +171,7 @@ picture.push(req.body.profile_pic)
 var removeHealthProfessionalProfile = catchAsync(async (req, res, next) => {
   const removeProfile = await Health_professional.destroy(
     { 
-      where: { user_id:req.user.id }
+      where: { user_id:req.query.id }
     })
   if (removeProfile) {
     res.status(200).send("successefully deleted your profile");

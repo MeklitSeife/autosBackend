@@ -30,7 +30,7 @@ exports.validate = (method) => {
           }
            case 'updateParentProfilePic': {
             return [
-              body('profile_pic').notEmpty().withMessage('profile pic is required'),
+              body('base64').notEmpty().withMessage('profile pic is required'),
             ] 
            }
            case 'createChildProfile': {

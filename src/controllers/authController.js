@@ -9,11 +9,12 @@ import { validationResult } from "express-validator";
 const { User } = Model;
 
 export const signupController = catchAsync(async (req, res, next) => {
+  console.log(req.body)
   await signupService(req, res, next);
 });
 
 export const emailVerificationController = catchAsync(async (req, res, next) => {
-  console.log(req.bod,req.body.otp, req.query.id)
+  console.log(req.body)
   try {
     const errors = validationResult(req); 
 
@@ -24,6 +25,9 @@ export const emailVerificationController = catchAsync(async (req, res, next) => 
  const userAcc = await User.findOne({
     where: {
     id: req.query.id
+     },
+     attributes: {
+      exclude: ['password']
      },
    })
    if(userAcc){
@@ -39,13 +43,14 @@ export const emailVerificationController = catchAsync(async (req, res, next) => 
        if(verifiedUser){
         return res.status(200).json({
           status: "success",
-          message: 'the user is verified!'
+          message: 'the user is verified!',
+          userAcc
         }); 
        }
       }else{
         return res.status(401).json({
         status: "error",
-        message: "error incorrect verification code",
+        message: "error occured when verifying the user",
           });
          }
       }else{

@@ -3,11 +3,26 @@ import { findProfileById } from "../helpers/index";
 import Model from "../models";
 import { validationResult } from "express-validator";
 import GlobalError from "../lib/globalError";
+import imagebbUploader from "imgbb-uploader";
 
-const { Organization } = Model;
+
+const { Organization, Verification_request } = Model;
 
 //create organization profile
 var createOrganizationProfile = catchAsync(async (req, res, next) => {
+  console.log(req.body)
+    const profile_option = {
+      apiKey: '3e587f3c960a3473c6996fb07d2a3766',
+      name: 'filename',
+      base64string:req.body.profile_base64
+     
+    } 
+    const license_option = {
+      apiKey: '3e587f3c960a3473c6996fb07d2a3766',
+      name: 'filename',
+      base64string:req.body.lisence_base64
+     
+    } 
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -15,7 +30,10 @@ var createOrganizationProfile = catchAsync(async (req, res, next) => {
       return;
     }
 
-    const organizationProfile = await findProfileById(Organization,req.user.id);
+    const res1 = await imagebbUploader(license_option)
+    const res2 = await imagebbUploader(profile_option)
+
+    const organizationProfile = await findProfileById(Organization,req.query.id);
     if (organizationProfile) {
       return next(new GlobalError("organization profile already exist", 401));
     }
@@ -25,17 +43,29 @@ var createOrganizationProfile = catchAsync(async (req, res, next) => {
       "address": req.body.address,
       "starting_year": req.body.starting_year,
       "bio": req.body.bio,
-      "profile_pic": [req.body.profile_pic],
-      "lisence": [req.body.lisence],
-      "user_id":req.user.id
+      "profile_pic": res1.url,
+      "lisence": res2.url,
+      "user_id":req.query.id
     })
     if (createProfile) {
-      return res.status(201).json({
-        status: "success",
-        message: "organization profile successfully created",
-        payload: createProfile
-      });
+        const createVerififcationRequest = await Verification_request.create({
+          "lisence": createProfile.lisence,
+          "requestor_id": createProfile.user_id
+        })
+      if(createVerififcationRequest){
+        return res.status(201).json({
+          status: "success",
+          message: "organization profile and verification request successfully created",
+          payload: createProfile
+        });
+     }else{
+       return next(
+         new GlobalError("error occured when creating vefification request", 400)
+       );}
+  
     }
+
+    
   } catch (err) {
     return next(err);
   }
@@ -96,26 +126,35 @@ var updateOrganizationProfile = catchAsync(async (req, res, next) => {
     return next(
       new GlobalError("error occured when updating your profile!", 400)
     );
-  }} catch (err) {
+  }
+} catch (err) {
     return next(err);
   }
 });
 
 //resend lisence
 var updateOrganizationLisence = catchAsync(async (req, res, next) => {
+  const options = {
+    apiKey: '3e587f3c960a3473c6996fb07d2a3766',
+    name: 'filename',
+    base64string:req.body.base64
+  }
   try{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(422).json({ errors: errors.array() });
       return;
     }
-
+ imagebbUploader(options).then(async respon => {
+  console.log(respon.url)
  const updateLisence = await Organization.update(
     {
-      "lisence": [req.body.lisence],
+      "lisence": respon.url,
     },
     {
-      where: { user_id:req.user.id},
+      where: { 
+        user_id:req.user.id
+      },
     }
   )
   if (updateLisence) {
@@ -127,25 +166,35 @@ var updateOrganizationLisence = catchAsync(async (req, res, next) => {
     return next(
       new GlobalError("error occured when updating your lisence!", 400)
     );
-  }} catch (err) {
+  }
+}).catch(err => {
+  return next(err);
+})
+} catch (err) {
     return next(err);
   }
 });
 //update organization profile picture
 var updateOrganizationProfilePic = catchAsync(async (req, res, next) => {
+  const options = {
+    apiKey: '3e587f3c960a3473c6996fb07d2a3766',
+    name: 'filename',
+    base64string:req.body.base64
+  }
   try{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(422).json({ errors: errors.array() });
       return;
     }
-const profile = await findProfileById(Organization, req.user.id);
+ imagebbUploader(options).then(async respon => {
+const profile = await findProfileById(Organization, req.query.id);
 var picture = profile.profile_pic
 picture.push(req.body.profile_pic)
 
  const updateProfilePic = await Organization.update(
     {
-      "profile_pic":picture,
+      "profile_pic":respon.url,
       },
     {
       where: { user_id:req.user.id},
@@ -160,7 +209,11 @@ picture.push(req.body.profile_pic)
     return next(
       new GlobalError("error occured when updating your profile picture!", 400)
     );
-  }} catch (err) {
+  }
+}).catch(err => {
+  return next(err);
+})
+} catch (err) {
     return next(err);
   }
 });

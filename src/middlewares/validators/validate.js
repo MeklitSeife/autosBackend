@@ -23,7 +23,7 @@ exports.validate = (method) => {
            .matches(/(?=.*?[0-9])/).withMessage('At least one Number')
            .matches(/(?=.*?[#?!@$%^&*-_])/).withMessage('At least one special character')
            .not().matches(/^$|\s+/).withMessage('White space not allowed'),
-           body('user_type').notEmpty().isIn(["Parent", "Organization","Health_professional"]).withMessage('user type is required')
+           body('user_type').notEmpty().isIn(["Parent", "Organization","Health_professional","Moderator"]).withMessage('user type is required')
            ] 
         }
     case 'signin': {

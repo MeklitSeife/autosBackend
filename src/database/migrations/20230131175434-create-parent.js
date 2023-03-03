@@ -33,7 +33,7 @@ module.exports = {
         type: DataTypes.STRING
       },
       profile_pic: {
-        type:DataTypes.ARRAY(DataTypes.STRING),
+        type: DataTypes.STRING
       },
       no_of_follower: {
         type: DataTypes.INTEGER,
