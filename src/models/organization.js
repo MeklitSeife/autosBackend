@@ -12,9 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate({User, Post, Verification_request,Post_comment, Reported_comment,Reported_post,User_warning}) {
       // define association here
       this.belongsTo(User, {foreignKey:'user_id', as:'organization'});
-      //this.hasMany(Post, { foreignKey: "posting_user_id", as: "posting_organization"});
      // this.hasMany(User_follows, { foreignKey: "follower_user_id", as: "follower_organization"});
-      //this.hasMany(Post_comment, { foreignKey: "commentor_id", as: "commentor_organization"});
       this.hasMany(Reported_comment, { foreignKey: "reporting_user_id", as: "comment_reporter_organization"});
       this.hasMany(Reported_post, { foreignKey: "reporting_user_id", as: "post_reporter_organization"});
       this.hasMany(User_warning, { foreignKey: "warned_user_id", as: "warned_organization"});

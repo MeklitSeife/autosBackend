@@ -5,7 +5,7 @@ import { validationResult } from "express-validator";
 import GlobalError from "../lib/globalError";
 import imagebbUploader from "imgbb-uploader";
 
-const { Post,Post_comment,Parent,User,Organization ,Health_professional} = Model;
+const { Post,Parent,User,Organization ,Health_professional} = Model;
 
 //create post
 var createPost = catchAsync(async (req, res, next) => {
@@ -64,10 +64,6 @@ var readMyOnePost = catchAsync(async (req, res, next) => {
     where: {
         posting_user_id: req.user.id,
         id: req.query.id
-          },
-        include: {
-            model: Post_comment ,
-            as: 'comment',
           }
        });
   if (postRead) {
@@ -134,6 +130,7 @@ var readAllPosts = catchAsync(async (req, res, next) => {
       include: {
         model: User,
         as: 'posting_user', 
+        required: true,
         attributes: {
           exclude: ['otp', 'password','reset_pass_token_key']
            },
@@ -219,27 +216,7 @@ var readAllPostsOfOneUser = catchAsync(async (req, res, next) => {
     }
 });
 
-//read one post of a specific user
-var readOnePostOfUser = catchAsync(async (req, res, next) => {
 
-    const postRead = await Post.findOne({
-        where: {
-            posting_user_id: req.query.userId,
-            id:req.query.id
-        },
-        include: {
-          model: Post_comment ,
-          as: 'commnet',
-        }
-    });
-    if (postRead) {
-         res.status(200).json({
-          postRead,
-      });
-    } else {
-      return next(new GlobalError("error!", 400));
-    }
-});
 
   //delete specific post
 var removeOnepost = catchAsync(async (req, res, next) => {
@@ -269,17 +246,17 @@ var removeOnepost = catchAsync(async (req, res, next) => {
   }
   });
 
+  
 module.exports = {
     createPost: createPost,
     readAllMyPosts: readAllMyPosts,
     readMyOnePost:readMyOnePost,
     readAllPostsOfOneUser:readAllPostsOfOneUser,
-    readOnePostOfUser:readOnePostOfUser,
     updatePost:updatePost,
     readAllPosts:readAllPosts,
     removeOnepost:removeOnepost,
     likePost:likePost,
-    unlikePost:unlikePost
+    unlikePost:unlikePost,
 };
 
 

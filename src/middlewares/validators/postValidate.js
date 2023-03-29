@@ -33,11 +33,8 @@ exports.validate = (method) => {
            }
        case 'readOnePostOfUser': {
             return [
-                body('first_name').notEmpty().withMessage('first name is required'),
-                body('last_name').notEmpty().withMessage('last name is required'),
-                body('gender').notEmpty().withMessage('gender is required'),
-                body('birthday').notEmpty().withMessage('relation of the parent with the autistic kid is required'),  
-                body('therapy_history').notEmpty().withMessage('therapy_history is required'), 
+              query('id').notEmpty().withMessage('id of the post is required'),
+              query('userId').notEmpty().withMessage('posting user id is required'),
             ] 
            }
     }

@@ -2,7 +2,6 @@
 const {
   Model, INTEGER
 } = require('sequelize');
-const user_follows = require('./user_follows');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -10,17 +9,15 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({Parent,Post,User_follows, Post_comment,Health_professional, Organization, Admin, Moderator}) {
+    static associate({Parent,Post, Post_comment,Health_professional, Organization, Admin, Moderator}) {
       // define association here
-      this.hasMany(Post, { foreignKey: "posting_user_id", as: "posting_user"});
       this.hasMany(Parent, { foreignKey: "user_id", as: "parent" });
       this.hasMany(Health_professional, { foreignKey: "user_id", as: "health_professional" });
       this.hasMany(Organization, { foreignKey: "user_id", as: "organization" });
       this.hasMany(Admin, { foreignKey: "user_id", as: "adminstrator" });
       this.hasMany(Moderator, { foreignKey: "user_id", as: "moderator" });
-      this.hasMany(Post_comment, { foreignKey: "commentor_id", as: "comment"});
-      this.hasMany(User_follows, { foreignKey: "commentor_id", as: "user_follow"});
-
+      this.hasMany(Post, { foreignKey: "posting_user_id", as: "posting_user"});
+      this.hasMany(Post_comment, { foreignKey: "commentor_id", as: "commentor_user"});
     }
   }
   User.init({

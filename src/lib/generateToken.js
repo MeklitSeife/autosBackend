@@ -1,7 +1,11 @@
 import jwt from "jsonwebtoken";
+import { promisify } from "util";
 import _ from "lodash";
 import { findByPk } from "../helpers";
+import Model from "../models";
 import GlobalError from "../lib/catchAsync";
+
+const { User } = Model;
 
 
 export const createToken = (payload, secretKey, expiresIn) =>
@@ -31,21 +35,20 @@ export const verifyResetToken = (token) =>
 
 export const jwtVerifyToken = token =>
   jwt.verify(token, `${process.env.JWT_SECRET_KEY}`);
-  
+
 export const refreshToken = async (__rt, next) => {
   const decoded = jwt.decode(__rt);
 
   if (!decoded.id) {
     return next(new GlobalError("unAuthorize, please login", 401));
   }
-  const freshClient = await findByPk(Clients, decoded.id);
+  const freshUser = await findByPk(User, decoded.id);
 
-  if (!freshClient) {
-    return next(new GlobalError("user does not exist", 401));
+  if (!freshUser) {
+    return next(new GlobalError("User does not exist", 401));
   }
 
-  const refreshSecret =
-    process.env.JWT_REFRESH_KEY + freshClient.toJSON().password;
+  const refreshSecret = process.env.JWT_REFRESH_KEY ;
 
   try {
     await promisify(jwt.verify)(__rt, refreshSecret);
@@ -56,7 +59,7 @@ export const refreshToken = async (__rt, next) => {
   }
 
   const [token, refreshToken] = createTokens(
-    _.pick(freshClient.toJSON(), ["id", "is_verified", "is_active"]),
+    _.pick(freshUser.toJSON(), ["id", "is_verified", "is_active"]),
     refreshSecret
   );
 

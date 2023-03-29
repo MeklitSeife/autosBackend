@@ -24,10 +24,10 @@ var createParentProfile = catchAsync(async (req, res, next) => {
       res.status(422).json({ errors: errors.array() });
       return;
     }
-
+  if(req.user.user_type == "Parent"){
     imagebbUploader(options).then(async respon => {
-      
-    const parentProfile = await findProfileById(Parent,req.query.id);
+    
+    const parentProfile = await findProfileById(Parent,req.user.id);
     if (parentProfile) {
       return next(new GlobalError("parent profile already exist", 401));
     }
@@ -40,7 +40,7 @@ var createParentProfile = catchAsync(async (req, res, next) => {
       "relation": req.body.relation,
       "profile_pic": respon.url,
       "bio": req.body.bio,
-      "user_id":req.query.id
+      "user_id":req.user.id
     })
     if (createProfile) {
       return res.status(201).json({
@@ -50,9 +50,13 @@ var createParentProfile = catchAsync(async (req, res, next) => {
       });
     }
     }).catch(err => {
-      console.log('err', err);
+      //console.log('err', err)
+        return next(new GlobalError("error!", 400));
     })
 
+  }  else {
+    return next(new GlobalError("error! user type must be parent ", 400));
+  }
 
 
   } catch (err) {
@@ -104,7 +108,7 @@ var updateParentProfile = catchAsync(async (req, res, next) => {
     "bio": req.body.bio,
     },
     {
-      where: { user_id:req.query.id},
+      where: { user_id:req.user.id},
     }
   )
   if (updateProfile) {
@@ -140,7 +144,7 @@ var updateParentProfilePic = catchAsync(async (req, res, next) => {
 
     imagebbUploader(options).then(async respon => {
 
-const profile = await findProfileById(Parent, req.query.id);
+const profile = await findProfileById(Parent, req.user.id);
 
 profile.profile_pic = respon.url;
 const updateProfilePic = await profile.save();
@@ -155,7 +159,7 @@ const updateProfilePic = await profile.save();
       new GlobalError("error occured when updating your profile picture!", 400)
     );}
 }).catch(err => {
-  console.log('err', err);
+  return next(new GlobalError("error!", 400));
 
 
 })} catch (err) {
@@ -166,7 +170,7 @@ const updateProfilePic = await profile.save();
 var removeParentProfile = catchAsync(async (req, res, next) => {
   const removeProfile = await Parent.destroy(
     { 
-      where: { user_id:req.query.id }
+      where: { user_id:req.user.id }
     })
   if (removeProfile) {
     res.status(200).send("successefully deleted your profile");

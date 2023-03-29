@@ -4,13 +4,13 @@ import healthProfessionalProfileController from "../controllers/healthProfession
 import { validate } from "../middlewares/validators/healthProfessionalValidate";
 
 const healthProfessionalRouter = Router();
-healthProfessionalRouter.post("/", validate('createHealthProfessionalProfile'),healthProfessionalProfileController.createHealthProfessionalProfile);
-healthProfessionalRouter.get("/readMyProfile",healthProfessionalProfileController.readHealthProfessionalProfile);
+healthProfessionalRouter.post("/", verifyToken,validate('createHealthProfessionalProfile'),healthProfessionalProfileController.createHealthProfessionalProfile);
+healthProfessionalRouter.get("/readMyProfile",verifyToken,healthProfessionalProfileController.readHealthProfessionalProfile);
 healthProfessionalRouter.post("/readHealthProfessionalProfile",validate('readHealthProfessionalProfile'),healthProfessionalProfileController.readHealthProfessionalProfileByOthers);
-healthProfessionalRouter.put("/updateHealthProfessionalProfile", validate('updateHealthProfessionalProfile'), healthProfessionalProfileController.updateHealthProfessionalProfile);
-healthProfessionalRouter.put("/updateHealthProfessionalLisence", validate('updateHealthProfessionalLisence'), healthProfessionalProfileController.updateHealthProfessionalLisence);
-healthProfessionalRouter.put("/updateHealthProfessionalProfilePic", validate('updateHealthProfessionalProfilePic'), healthProfessionalProfileController.updateHealthProfessionalProfilePic);
-healthProfessionalRouter.delete("/deleteHealthProfessionalProfile",healthProfessionalProfileController.removeHealthProfessionalProfile);
+healthProfessionalRouter.put("/updateHealthProfessionalProfile", validate('updateHealthProfessionalProfile'),verifyToken, healthProfessionalProfileController.updateHealthProfessionalProfile);
+healthProfessionalRouter.put("/updateHealthProfessionalLisence", validate('updateHealthProfessionalLisence'), verifyToken,healthProfessionalProfileController.updateHealthProfessionalLisence);
+healthProfessionalRouter.put("/updateHealthProfessionalProfilePic", validate('updateHealthProfessionalProfilePic'), verifyToken,healthProfessionalProfileController.updateHealthProfessionalProfilePic);
+healthProfessionalRouter.delete("/deleteHealthProfessionalProfile",verifyToken,healthProfessionalProfileController.removeHealthProfessionalProfile);
 
 
 export default healthProfessionalRouter;

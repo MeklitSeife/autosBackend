@@ -13,12 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(User, {foreignKey:'user_id', as:'parent'});
       this.hasMany(Child, { foreignKey: "parent_id", as: "child" });
-      //this.hasMany(Post, { foreignKey: "posting_user_id", as: "posting_parent" });
-      //this.hasMany(Post_comment, { foreignKey: "commentor_id", as: "commentor_parent"});
-      this.hasMany(Reported_comment, { foreignKey: "reporting_user_id", as: "comment_reporter_parent"});
+      //this.hasMany(Reported_comment, { foreignKey: "reporting_user_id", as: "comment_reporter_parent"});
       this.hasMany(Reported_post, { foreignKey: "reporting_user_id", as: "post_reporter_parent"});
       this.hasMany(User_warning, { foreignKey: "warned_user_id", as: "warned_parent"});
-    
     }
   }
   Parent.init({

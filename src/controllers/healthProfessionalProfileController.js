@@ -3,18 +3,39 @@ import { findProfileById } from "../helpers/index";
 import Model from "../models";
 import { validationResult } from "express-validator";
 import GlobalError from "../lib/globalError";
+import imagebbUploader from "imgbb-uploader";
+
 
 const { Health_professional } = Model;
 
 //create HealthProfessional profile
 var createHealthProfessionalProfile = catchAsync(async (req, res, next) => {
+
+  const profile_option = {
+    apiKey: '3e587f3c960a3473c6996fb07d2a3766',
+    name: 'filename',
+    base64string:req.body.profile_base64
+   
+  } 
+  const license_option = {
+    apiKey: '3e587f3c960a3473c6996fb07d2a3766',
+    name: 'filename',
+    base64string:req.body.lisence_base64
+   
+  } 
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(422).json({ errors: errors.array() });
       return;
      }
-    const healthProfessionalProfile = await findProfileById(Health_professional,req.query.id);
+console.log(req.user.user_type)
+     if(req.user.user_type == "Health_professional"){
+
+      const res1 = await imagebbUploader(license_option)
+      const res2 = await imagebbUploader(profile_option)
+
+    const healthProfessionalProfile = await findProfileById(Health_professional,req.user.id);
     if (healthProfessionalProfile) {
       return next(new GlobalError("Health Professional profile already exist", 401));
     }
@@ -25,10 +46,10 @@ var createHealthProfessionalProfile = catchAsync(async (req, res, next) => {
       "gender": req.body.gender,
       "working_place": req.body.working_place,
       "experience": req.body.experience,
-      "bio": req.body.bio,
-      "profile_pic": [req.body.profile_pic],
-      "lisence": [req.body.lisence],
-      "user_id":req.query.id
+      "bio": req.body.bio, 
+      "profile_pic": res1.url,
+      "lisence": res2.url,
+      "user_id":req.user.id
     })
     if (createProfile) {
       return res.status(201).json({
@@ -37,6 +58,10 @@ var createHealthProfessionalProfile = catchAsync(async (req, res, next) => {
         payload: createProfile
       });
     }
+
+  } else {
+    return next(new GlobalError("error! user type must be health professional ", 400));
+  }
   } catch (err) {
     return next(err);
   }
@@ -44,7 +69,7 @@ var createHealthProfessionalProfile = catchAsync(async (req, res, next) => {
 
 //read HealthProfessional profile(by profile owner HealthProfessional)
 var readHealthProfessionalProfile = catchAsync(async (req, res, next) => {
-  const readProfile = await findProfileById(Health_professional, req.query.id);
+  const readProfile = await findProfileById(Health_professional, req.user.id);
   if (readProfile) {
     const profile = readProfile.toJSON()
     res.status(200).json({
@@ -87,7 +112,7 @@ var updateHealthProfessionalProfile = catchAsync(async (req, res, next) => {
       "bio": req.body.bio,
     },
     {
-      where: { user_id:req.query.id},
+      where: { user_id:req.user.id},
     }
   )
   if (updateProfile) {
@@ -118,7 +143,7 @@ var updateHealthProfessionalLisence = catchAsync(async (req, res, next) => {
       "lisence": [req.body.lisence],
     },
     {
-      where: { user_id:req.query.id},
+      where: { user_id:req.user.id},
     }
   )
   if (updateLisence) {
@@ -142,7 +167,7 @@ var updateHealthProfessionalProfilePic = catchAsync(async (req, res, next) => {
       res.status(422).json({ errors: errors.array() });
       return;
     }
-const profile = await findProfileById(Health_professional, req.query.id);
+const profile = await findProfileById(Health_professional, req.user.id);
 var picture = profile.profile_pic
 picture.push(req.body.profile_pic)
 
@@ -151,7 +176,7 @@ picture.push(req.body.profile_pic)
       "profile_pic":picture,
       },
     {
-      where: { user_id:req.query.id},
+      where: { user_id:req.user.id},
     }
   )
   if (updateProfilePic) { 
@@ -171,7 +196,7 @@ picture.push(req.body.profile_pic)
 var removeHealthProfessionalProfile = catchAsync(async (req, res, next) => {
   const removeProfile = await Health_professional.destroy(
     { 
-      where: { user_id:req.query.id }
+      where: { user_id:req.user.id }
     })
   if (removeProfile) {
     res.status(200).send("successefully deleted your profile");

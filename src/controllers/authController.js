@@ -9,12 +9,10 @@ import { validationResult } from "express-validator";
 const { User } = Model;
 
 export const signupController = catchAsync(async (req, res, next) => {
-  console.log(req.body)
   await signupService(req, res, next);
 });
 
 export const emailVerificationController = catchAsync(async (req, res, next) => {
-  console.log(req.body)
   try {
     const errors = validationResult(req); 
 
@@ -27,7 +25,7 @@ export const emailVerificationController = catchAsync(async (req, res, next) => 
     id: req.query.id
      },
      attributes: {
-      exclude: ['password']
+      exclude: ['reset_pass_token_key','password']
      },
    })
    if(userAcc){
@@ -41,10 +39,22 @@ export const emailVerificationController = catchAsync(async (req, res, next) => 
           }
        );
        if(verifiedUser){
+        const refreshSecret = process.env.JWT_REFRESH_KEY ; 
+        const [token, refreshToken] = createTokens(
+          {
+            id: userAcc.id,
+            userAcc:userAcc.user_type,
+            is_active: userAcc.is_active,
+            user_type: userAcc.user_type
+          },
+          refreshSecret
+        );
+        const payload = {userAcc, token, refreshToken };
+
         return res.status(200).json({
           status: "success",
           message: 'the user is verified!',
-          userAcc
+          payload
         }); 
        }
       }else{
@@ -65,10 +75,11 @@ export const emailVerificationController = catchAsync(async (req, res, next) => 
 });
 
 export const signinController = async (req, res) => {
-  const refreshSecret = process.env.JWT_REFRESH_KEY + req.user.password; 
+  const refreshSecret = process.env.JWT_REFRESH_KEY ; 
   const [token, refreshToken] = createTokens(
     {
       id: req.user.id,
+      user_type:req.user.user_type,
       is_active: req.user.is_active,
       user_type: req.user.user_type
     },

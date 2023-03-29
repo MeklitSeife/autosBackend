@@ -9,7 +9,7 @@ exports.validate = (method) => {
               body('first_name').notEmpty().withMessage('first name is required'),
               body('last_name').notEmpty().withMessage('last name is required'),
               body('gender').notEmpty().withMessage('gender year is required'),
-              body('lisence').notEmpty().withMessage('lisence is required'),
+              body('lisence_base64').notEmpty().withMessage('lisence is required'),
             ] 
            }
            case 'readHealthProfessionalProfile': {

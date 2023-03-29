@@ -10,7 +10,6 @@ const { Organization, Verification_request } = Model;
 
 //create organization profile
 var createOrganizationProfile = catchAsync(async (req, res, next) => {
-  console.log(req.body)
     const profile_option = {
       apiKey: '3e587f3c960a3473c6996fb07d2a3766',
       name: 'filename',
@@ -29,11 +28,12 @@ var createOrganizationProfile = catchAsync(async (req, res, next) => {
       res.status(422).json({ errors: errors.array() });
       return;
     }
+    if(req.user.user_type == "Organization"){
 
     const res1 = await imagebbUploader(license_option)
     const res2 = await imagebbUploader(profile_option)
 
-    const organizationProfile = await findProfileById(Organization,req.query.id);
+    const organizationProfile = await findProfileById(Organization,req.user.id);
     if (organizationProfile) {
       return next(new GlobalError("organization profile already exist", 401));
     }
@@ -45,7 +45,7 @@ var createOrganizationProfile = catchAsync(async (req, res, next) => {
       "bio": req.body.bio,
       "profile_pic": res1.url,
       "lisence": res2.url,
-      "user_id":req.query.id
+      "user_id":req.user.id
     })
     if (createProfile) {
         const createVerififcationRequest = await Verification_request.create({
@@ -64,7 +64,9 @@ var createOrganizationProfile = catchAsync(async (req, res, next) => {
        );}
   
     }
-
+  } else {
+    return next(new GlobalError("error! user type must be organization ", 400));
+  }
     
   } catch (err) {
     return next(err);
@@ -188,7 +190,7 @@ var updateOrganizationProfilePic = catchAsync(async (req, res, next) => {
       return;
     }
  imagebbUploader(options).then(async respon => {
-const profile = await findProfileById(Organization, req.query.id);
+const profile = await findProfileById(Organization, req.user.id);
 var picture = profile.profile_pic
 picture.push(req.body.profile_pic)
 

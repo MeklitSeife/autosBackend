@@ -44,8 +44,8 @@ export const verifyToken = catchAsync(async (req, res, next) => {
         }
       req.user = userAcc.toJSON();
       next();
-  } catch (err) {
-    console.log(err.stack);
+  } catch(err) {
+    console.log(err)
     const refresh_token = req.header('refreshToken');  
     const { accessToken, newRefreshToken } = await refreshToken(refresh_token, next); 
   }
