@@ -6,7 +6,7 @@ import GlobalError from "../lib/globalError";
 import imagebbUploader from "imgbb-uploader";
 
 
-const { Health_professional } = Model;
+const { Health_professional , Verification_request} = Model;
 
 //create HealthProfessional profile
 var createHealthProfessionalProfile = catchAsync(async (req, res, next) => {
@@ -52,11 +52,20 @@ console.log(req.user.user_type)
       "user_id":req.user.id
     })
     if (createProfile) {
+      const createVerififcationRequest = await Verification_request.create({
+        "lisence": createProfile.lisence,
+        "requestor_id": createProfile.user_id
+      })
+    if(createVerififcationRequest){
       return res.status(201).json({
         status: "success",
-        message: "Health professional profile successfully created",
+        message: "health professional profile and verification request successfully created",
         payload: createProfile
       });
+   }else{
+     return next(
+       new GlobalError("error occured when creating vefification request", 400)
+     );}
     }
 
   } else {

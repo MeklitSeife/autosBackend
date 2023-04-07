@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(User, {foreignKey:'commentor_id', as:'commentor_user'});
       this.belongsTo(Post, {foreignKey:'post_id', as:'post_comment'});
+      this.hasMany(Reported_comment, {foreignKey:'reported_comment_id', as:'reported_comment'});
     }
   }
   Post_comment.init({
@@ -32,7 +33,15 @@ module.exports = (sequelize, DataTypes) => {
     comment_text: {
       type:DataTypes.STRING,
       allowNull:false
-    }
+    } ,
+    is_reported: {
+      type: DataTypes.BOOLEAN,
+      defaultValue:false
+    },
+    no_of_report:{
+      type: DataTypes.INTEGER,
+      defaultValue:'0'
+    },
   }, {
     sequelize,
     modelName: 'Post_comment',

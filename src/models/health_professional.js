@@ -12,12 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate({User, Followers, Verification_request,Post, Post_comment, Reported_comment,Reported_post,User_warning}) {
       // define association here
       this.belongsTo(User, {foreignKey:'user_id', as:'health_professional'});
-      //this.hasMany(Reported_comment, { foreignKey: "reporting_user_id", as: "comment_reporter_health_professional"});
       this.hasMany(User_warning, { foreignKey: "warned_user_id", as: "warned_health_professional"});
-      this.hasMany(Reported_post, { foreignKey: "reporting_user_id", as: "post_reporter_health_professional"});
       this.hasMany(Verification_request, { foreignKey: "requestor_id", as: "health_professional_verification"});
-      
-
     }
   }
   Health_professional.init({
@@ -68,14 +64,6 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue:'0'
     },
     no_of_following: {
-      type: DataTypes.INTEGER,
-      defaultValue:'0'
-    },
-    is_reported: {
-      type: DataTypes.BOOLEAN,
-      defaultValue:false
-    },
-    no_of_report:{
       type: DataTypes.INTEGER,
       defaultValue:'0'
     }

@@ -7,7 +7,6 @@ const { Child, Parent } = Model;
 
 //create Child profile
 var createChildProfile = catchAsync(async (req, res, next) => {
-  console.log(req.body)
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -16,7 +15,7 @@ var createChildProfile = catchAsync(async (req, res, next) => {
     }
     const parentProfile = await Parent.findOne({
       where:{
-        user_id :req.query.id
+        user_id :req.user.id
       }
     })
     if(parentProfile){
@@ -52,7 +51,7 @@ var readChildMyProfile = catchAsync(async (req, res, next) => {
   const readProfile = await Child.findAll({
     where:
     {
-         parent_id:req.query.id
+         parent_id:req.user.id
     }
 });
   if (readProfile) {
@@ -83,7 +82,7 @@ var updateMyChildProfile = catchAsync(async (req, res, next) => {
         "therapy_history": req.body.therapy_history,
     },
     {
-      where: { parent_id:req.query.id},
+      where: { parent_id:req.user.id},
     }
   )
   if (updateProfile) {

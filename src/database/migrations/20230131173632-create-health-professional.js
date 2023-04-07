@@ -53,14 +53,6 @@ module.exports = {
         type: DataTypes.BOOLEAN,
         defaultValue:false
       },
-      is_reported: {
-        type: DataTypes.BOOLEAN,
-        defaultValue:false
-      },
-      no_of_report: {
-        type: DataTypes.INTEGER,
-        defaultValue:'0'
-      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE

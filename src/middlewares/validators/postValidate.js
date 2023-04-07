@@ -1,15 +1,12 @@
 import { body,query,oneOf} from "express-validator"
-import Model from "../../models";
 exports.validate = (method) => { 
     
-    const { User } = Model;
     switch (method) {
         case 'createPost': {
             return [
               oneOf([
               body('text').notEmpty().withMessage('text for the post is required'),
               body('post_img').notEmpty().withMessage('image for the post is required'),
-              query('id').notEmpty().withMessage('id of the posting user is required'),
             ])
            ]
            }

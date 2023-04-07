@@ -13,9 +13,6 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(User, {foreignKey:'user_id', as:'parent'});
       this.hasMany(Child, { foreignKey: "parent_id", as: "child" });
-      //this.hasMany(Reported_comment, { foreignKey: "reporting_user_id", as: "comment_reporter_parent"});
-      this.hasMany(Reported_post, { foreignKey: "reporting_user_id", as: "post_reporter_parent"});
-      this.hasMany(User_warning, { foreignKey: "warned_user_id", as: "warned_parent"});
     }
   }
   Parent.init({
@@ -58,15 +55,7 @@ module.exports = (sequelize, DataTypes) => {
     no_of_following: {
       type: DataTypes.INTEGER,
       defaultValue:'0'
-    },
-    is_reported: {
-      type: DataTypes.BOOLEAN,
-      defaultValue:false
-    },
-    no_of_report:{
-      type: DataTypes.INTEGER,
-      defaultValue:'0'
-    },
+    }
   }, {
     sequelize,
     modelName: 'Parent',
