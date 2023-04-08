@@ -35,14 +35,6 @@ module.exports = {
       profile_pic: {
         type: DataTypes.STRING
       },
-      no_of_follower: {
-        type: DataTypes.INTEGER,
-        defaultValue:'0'
-      },
-      no_of_following: {
-        type: DataTypes.INTEGER,
-        defaultValue:'0'
-      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE

@@ -2,53 +2,232 @@ import catchAsync from "../lib/catchAsync";
 import Model from "../models";
 import GlobalError from "../lib/globalError";
 
-const { Post,User_follows} = Model;
+const { User, User_follows, Organization, Parent, Health_professional} = Model;
 
 //follow user
-var follow = catchAsync(async (req, res, next) => {
+var followUser = catchAsync(async (req, res, next) => {
 
- const userFollow = await User_follows.create({
-        "follower_user_id": req.user.follower_user_id,
-        "followed_user_id": req.body.followed_user_id,
-      })
+  //check if the user has already followed the user
+  const follow = await User_follows.findOne({
+    where:{
+    follower_user_id: req.user.id,
+    followed_user_id: req.query.followed_user_id,
+    }
+  })
+if (follow) {
+  return next(
+    new GlobalError("you already followed this user!", 400)
+  );
+}
+else{
+  const userFollow = await User_follows.create({
+    "follower_user_id": req.user.id,
+    "followed_user_id": req.query.followed_user_id,
+  })
+if (userFollow) {
 
-  if (userFollow) {
-  post.no_of_likes =  ++post.no_of_likes;
-  const likeUpdate = await post.save();
-   res.status(200).json({
-    status: "success",
-    message: "organization profile and verification request successfully created",
-    payload: likeUpdate
-    });
-  } else {
-    return next(new GlobalError("error!", 400));
-  }
+const followingUser = await User.findOne({
+  where:{
+     id:req.user.id
+  },
+  attributes: {
+    exclude: ['otp', 'password','reset_pass_token_key']
+     },
+})
+
+const followedUser = await User.findOne({
+  where:{
+     id:req.query.followed_user_id
+  },
+  attributes: {
+    exclude: ['otp', 'password','reset_pass_token_key']
+     },
+})
+
+followingUser.no_of_following =  ++followingUser.no_of_following;
+followedUser.no_of_follower =  ++followedUser.no_of_follower;
+
+const followingUpdate = await followingUser.save();
+const followedUpdate = await followedUser.save();
+res.status(200).json({
+status: "success",
+message: "you have successfully followed the user",
+});
+}}
 });
 
 //unfollow user
-var unfollow = catchAsync(async (req, res, next) => {
-
-  const post = await Post.findOne({
+var unfollowUser = catchAsync(async (req, res, next) => {
+  const userFollow = await User_follows.findOne({
     where:{
-      id:req.query.id
+    follower_user_id: req.user.id,
+    followed_user_id: req.query.followed_user_id,
     }
-  });
-  if (post) {
-  post.no_of_likes = --post.no_of_likes;
-  const likeUpdate = await post.save();
+  })
+if (userFollow) {
+
+const followingUser = await User.findOne({
+  where:{
+     id:req.user.id
+  },
+  attributes: {
+    exclude: ['otp', 'password','reset_pass_token_key']
+     },
+})
+
+const followedUser = await User.findOne({
+  where:{
+     id:req.query.followed_user_id
+  },
+  attributes: {
+    exclude: ['otp', 'password','reset_pass_token_key']
+     },
+})
+const unfollwed = await userFollow.destroy()
+if (unfollwed){
+  followingUser.no_of_following =  --followingUser.no_of_following;
+  followedUser.no_of_follower =  --followedUser.no_of_follower;
+
+  const followingUpdate = await followingUser.save();
+  const followedUpdate = await followedUser.save();
    res.status(200).json({
-    status: "success",
-    message: "organization profile and verification request successfully created",
-    payload: likeUpdate
+   status: "success",
+   message: "you have successfully unfollowed the user",
+  });
+ }
+} else {
+return next(new GlobalError("you do not follow this user!", 400));
+}
+});
+
+
+//remove follower
+var removeFollower = catchAsync(async (req, res, next) => {
+  const userFollow = await User_follows.findOne({
+    where:{
+    follower_user_id: req.query.follower_user_id,
+    followed_user_id: req.user.id,
+    }
+  })
+if (userFollow) {
+
+const followingUser = await User.findOne({
+  where:{
+     id:req.query.follower_user_id
+  },
+  attributes: {
+    exclude: ['otp', 'password','reset_pass_token_key']
+     },
+})
+
+const followedUser = await User.findOne({
+  where:{
+     id:req.user.id
+  },
+  attributes: {
+    exclude: ['otp', 'password','reset_pass_token_key']
+     },
+})
+const unfollwed = await userFollow.destroy()
+if (unfollwed){
+  followingUser.no_of_following =  --followingUser.no_of_following;
+  followedUser.no_of_follower =  --followedUser.no_of_follower;
+
+  const followingUpdate = await followingUser.save();
+  const followedUpdate = await followedUser.save();
+   res.status(200).json({
+   status: "success",
+   message: "you have successfully removed the follower",
+  });
+ }
+} else {
+return next(new GlobalError("you do not follow this user!", 400));
+}
+});
+
+
+
+//read all users one user is following
+var readAllFollowing = catchAsync(async (req, res, next) => {
+
+  const followingRead = await User_follows.findAll({
+      where: {
+          follower_user_id: req.query.id
+      },
+      include: {
+        model: User,
+        as: 'user_follow', 
+        required: true,
+        attributes: {
+          exclude: ['otp', 'password','reset_pass_token_key']
+           },
+            include:[{
+              model: Organization ,
+              as: 'organization', 
+          },
+          {
+              model: Parent ,
+              as: 'parent', 
+          },
+          {
+            model: Health_professional ,
+            as: 'health_professional', 
+        }]
+      }
+  });
+  if (followingRead) {
+       res.status(200).json({
+        followingRead,
     });
   } else {
     return next(new GlobalError("error!", 400));
   }
 });
 
+//read all followers of one user 
+var readAllFollowers = catchAsync(async (req, res, next) => {
+
+  const followingRead = await User_follows.findAll({
+      where: {
+          followed_user_id: req.query.id
+      },
+      include: {
+        model: User,
+        as: 'user_follow', 
+        required: true,
+        attributes: {
+          exclude: ['otp', 'password','reset_pass_token_key']
+           },
+            include:[{
+              model: Organization ,
+              as: 'organization', 
+          },
+          {
+              model: Parent ,
+              as: 'parent', 
+          },
+          {
+            model: Health_professional ,
+            as: 'health_professional', 
+        }]
+      }
+  });
+  if (followingRead) {
+       res.status(200).json({
+        followingRead,
+    });
+  } else {
+    return next(new GlobalError("error!", 400));
+  }
+});
+
+
 module.exports = {
-    follow: follow,
-    unfollow: readAllMyPosts,
+  followUser: followUser,
+    unfollowUser: unfollowUser,
+    readAllFollowing:readAllFollowing,
+    readAllFollowers:readAllFollowers,
+    removeFollower:removeFollower
 };
 
 

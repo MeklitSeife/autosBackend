@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({User, Child, Post, Post_comment,Reported_comment,Reported_post,User_warning}) {
+    static associate({User, Child}) {
       // define association here
       this.belongsTo(User, {foreignKey:'user_id', as:'parent'});
       this.hasMany(Child, { foreignKey: "parent_id", as: "child" });
@@ -47,14 +47,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     profile_pic:{
       type:DataTypes.STRING
-    },
-    no_of_follower:{
-      type: DataTypes.INTEGER,
-      defaultValue:'0'
-    },
-    no_of_following: {
-      type: DataTypes.INTEGER,
-      defaultValue:'0'
     }
   }, {
     sequelize,

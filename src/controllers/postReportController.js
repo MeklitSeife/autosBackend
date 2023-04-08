@@ -21,7 +21,6 @@ var createPostReport = catchAsync(async (req, res, next) => {
         },
       })
       if (reportedPost) {
-
 //check if the user has already reported this post before
         const report = await Reported_post.findOne({
           where:{

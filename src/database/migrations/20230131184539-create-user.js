@@ -35,6 +35,14 @@ module.exports = {
       reset_pass_token_key:{
         type: DataTypes.STRING
       },
+      no_of_follower: {
+        type: DataTypes.INTEGER,
+        defaultValue:'0'
+      },
+      no_of_following: {
+        type: DataTypes.INTEGER,
+        defaultValue:'0'
+      },
       is_reported: {
         type: DataTypes.BOOLEAN,
         defaultValue:false

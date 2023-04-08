@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({User, Followers, Verification_request,Post, Post_comment, Reported_comment,Reported_post,User_warning}) {
+    static associate({User,Verification_request,User_warning}) {
       // define association here
       this.belongsTo(User, {foreignKey:'user_id', as:'health_professional'});
       this.hasMany(User_warning, { foreignKey: "warned_user_id", as: "warned_health_professional"});
@@ -58,14 +58,6 @@ module.exports = (sequelize, DataTypes) => {
     is_lisence_verified: {
       type: DataTypes.BOOLEAN,
       defaultValue:false
-    },
-    no_of_follower:{
-      type: DataTypes.INTEGER,
-      defaultValue:'0'
-    },
-    no_of_following: {
-      type: DataTypes.INTEGER,
-      defaultValue:'0'
     }
   }, {
     sequelize,
