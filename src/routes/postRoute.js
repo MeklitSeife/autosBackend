@@ -11,6 +11,7 @@ postRouter.put("/updatePost",verifyToken, validate('updatePost'), postController
 postRouter.get("/readAllPosts", postController.readAllPosts);
 postRouter.post("/like", postController.likePost);
 postRouter.post("/unlike", postController.unlikePost);
+postRouter.post("/sharePost",verifyToken, postController.sharePost);
 postRouter.post("/readAllPostsOfOneUser", validate('readAllPostsOfOneUser'), postController.readAllPostsOfOneUser);
 postRouter.delete("/removeOnepost", verifyToken,postController.removeOnepost);
 

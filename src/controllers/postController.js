@@ -216,8 +216,6 @@ var readAllPostsOfOneUser = catchAsync(async (req, res, next) => {
     }
 });
 
-
-
   //delete specific post
 var removeOnepost = catchAsync(async (req, res, next) => {
     try{
@@ -246,7 +244,28 @@ var removeOnepost = catchAsync(async (req, res, next) => {
   }
   });
 
-  
+  // share a post
+  var sharePost = catchAsync(async (req, res, next) => {
+
+    const post = await Post.findOne({
+      where:{
+        id:req.query.id
+      }
+    });
+    if (post) {
+      console.log("userrrr",req.user.id)
+    post.posting_user_id = req.user.id;
+    const sharedPost = await post.save();
+     res.status(200).json({
+      status: "success",
+      message: "you shared the post sucessfully",
+      payload: sharedPost
+      });
+    } else {
+      return next(new GlobalError("error!", 400));
+    }
+   });
+
 module.exports = {
     createPost: createPost,
     readAllMyPosts: readAllMyPosts,
@@ -257,6 +276,7 @@ module.exports = {
     removeOnepost:removeOnepost,
     likePost:likePost,
     unlikePost:unlikePost,
+    sharePost:sharePost
 };
 
 
