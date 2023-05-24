@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     commentor_id: {
       type:DataTypes.UUID,
-      allowNull:false
+      allowNull:false,
     },
     post_id: {
       type:DataTypes.UUID,

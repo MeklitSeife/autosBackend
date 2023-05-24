@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({Parent,User_follows,Post,Reported_user,Reported_post,User_warning, Reported_comment,Post_comment,Health_professional, Organization, Admin, Moderator}) {
+    static associate({Parent,Following,Follower,Post,Reported_user,Reported_post,User_warning, Reported_comment,Post_comment,Health_professional, Organization, Admin, Moderator}) {
       // define association here
       this.hasMany(Parent, { foreignKey: "user_id", as: "parent" });
       this.hasMany(Health_professional, { foreignKey: "user_id", as: "health_professional" });
@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(Reported_user, { foreignKey: "reporting_user_id", as: "reported_user" });
       this.hasMany(Reported_comment, {foreignKey:'reporting_user_id', as:'comment_reporter_user'});
       this.hasMany(User_warning, { foreignKey: "warned_user_id", as: "warned_user"});
-      this.hasMany(User_follows, { foreignKey: "follower_user_id", as: "user_follow"});
+      this.hasMany(Follower, { foreignKey: "follower_user_id", as: "follower"});
+      this.hasMany(Following, { foreignKey: "followed_user_id", as: "following"});
     }
   }
   User.init({

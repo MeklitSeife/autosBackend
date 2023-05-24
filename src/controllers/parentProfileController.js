@@ -16,7 +16,6 @@ var createParentProfile = catchAsync(async (req, res, next) => {
     name: 'filename',
     base64string: req.body.base64
   }
- 
 
   try {
     const errors = validationResult(req);
@@ -127,8 +126,6 @@ var updateParentProfile = catchAsync(async (req, res, next) => {
 
 //update parent profile picture
 var updateParentProfilePic = catchAsync(async (req, res, next) => {
-
-
   const options = {
     apiKey: '3e587f3c960a3473c6996fb07d2a3766',
     name: 'filename',
@@ -166,6 +163,7 @@ const updateProfilePic = await profile.save();
     return next(err);
   }
 });
+
 //delete parent profile
 var removeParentProfile = catchAsync(async (req, res, next) => {
   const removeProfile = await Parent.destroy(
@@ -180,6 +178,7 @@ var removeParentProfile = catchAsync(async (req, res, next) => {
     );
   }
 });
+
 module.exports = {
     createParentProfile: createParentProfile,
     readParentProfile: readParentProfile,

@@ -4,16 +4,14 @@ module.exports = {
   async up(queryInterface, DataTypes) {
     await queryInterface.createTable('Autisms', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.UUID,        
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
       },
       discription: {
-        type: DataTypes.STRING
-      },
-      cover_image: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull:false
       },
       createdAt: {
         allowNull: false,

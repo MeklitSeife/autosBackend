@@ -8,7 +8,7 @@ exports.validate = (method) => {
             return [
               body('first_name').notEmpty().withMessage('first name is required'),
               body('last_name').notEmpty().withMessage('last name is required'),
-              body('gender').notEmpty().withMessage('gender is required'),
+              body('gender').notEmpty().isIn(["Female", "Male","Rather not to mention"]).withMessage('gender is required'),
               body('relation').notEmpty().isIn(["parent", "relative","care taker"]).withMessage('relation of the parent with the autistic kid is required'),
             ] 
            }
@@ -22,7 +22,7 @@ exports.validate = (method) => {
                 oneOf([
                 body('first_name').notEmpty().withMessage('first name is required'),
                 body('last_name').notEmpty().withMessage('last name is required'),
-                body('gender').notEmpty().withMessage('gender is required'),
+                body('gender').notEmpty().isIn(["Female", "Male","Rather not to mention"]).withMessage('gender is required'),
                 body('relation').notEmpty().isIn(["parent", "relative","care taker"]).withMessage('relation of the parent with the autistic kid is required'),  
                 body('bio').notEmpty().withMessage('bio is required'),  
             ])

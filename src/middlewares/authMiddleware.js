@@ -8,16 +8,14 @@ import { validationResult } from "express-validator";
 const { User } = Model;
 
 export const signinAuth = async (req, res, next) => {
-  try{
-  
-    const errors = validationResult(req); 
 
+  try{
+    
+    const errors = validationResult(req); 
     if (!errors.isEmpty()) {
       res.status(422).json({ errors: errors.array() });
       return;
-
     }
-
     const { email, password } = req.body;
 
     const userAcc = await findUser(User, email);
@@ -27,7 +25,7 @@ export const signinAuth = async (req, res, next) => {
     }
   
     if (!(await comparePassword(password, userAcc.password))) {
-      return next(new GlobalError("Invalid credential", 400));
+      return next(new GlobalError("Invalid credential", 401));
     }
   
     if (userAcc && !userAcc.toJSON().is_active) {

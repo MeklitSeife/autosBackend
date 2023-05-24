@@ -2,7 +2,7 @@
 /** @type {import('DataTypes-cli').Migration} */
 module.exports = {
   async up(queryInterface, DataTypes) {
-    await queryInterface.createTable('User_follows', {
+    await queryInterface.createTable('Followers', {
       id: {
         primaryKey: true,
         type: DataTypes.UUID,        
@@ -13,7 +13,7 @@ module.exports = {
         type: DataTypes.UUID,
         allowNull:false
       },
-      followed_user_id: {
+      user_id: {
         type: DataTypes.UUID,
         allowNull:false
       },
@@ -28,6 +28,6 @@ module.exports = {
     });
   },
   async down(queryInterface, DataTypes) {
-    await queryInterface.dropTable('User_follows');
+    await queryInterface.dropTable('Followers');
   }
 };

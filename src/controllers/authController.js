@@ -9,6 +9,7 @@ import { validationResult } from "express-validator";
 const { User } = Model;
 
 export const signupController = catchAsync(async (req, res, next) => {
+  console.log(req.body)
   await signupService(req, res, next);
 });
 

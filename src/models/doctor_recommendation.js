@@ -14,12 +14,31 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Doctor_recommendation.init({
-    name: DataTypes.STRING,
-    gender: DataTypes.ENUM("Female","Male","Rather not to mention"),
-    work_place: DataTypes.STRING,
-    experience:DataTypes.STRING,
-    contact: DataTypes.STRING,
-    cover_image: DataTypes.STRING
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    name:  {
+      type: DataTypes.STRING,
+      allowNull: false
+        } ,
+    gender:  {
+      type: DataTypes.ENUM("Female","Male","Rather not to mention"),
+      allowNull: false
+        } ,
+    work_place:  {
+      type: DataTypes.STRING,
+      allowNull: false
+        } ,
+    experience: {
+      type: DataTypes.STRING,
+      allowNull: false
+        } ,
+    contact:  {
+      type: DataTypes.STRING,
+      allowNull: false
+        } ,
   }, {
     sequelize,
     modelName: 'Doctor_recommendation',

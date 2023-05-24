@@ -14,8 +14,15 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Autism.init({
-    discription: DataTypes.STRING,
-    cover_image: DataTypes.STRING
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    discription: {
+      type: DataTypes.STRING,
+      allowNull: false
+        } 
   }, {
     sequelize,
     modelName: 'Autism',

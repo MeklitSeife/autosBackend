@@ -11,6 +11,7 @@ import userReportRouter from "./userReportRoute";
 import postReportRouter from "./postReportRoute";
 import commentReportRouter from "./commentReportRoute";
 import followRouter from "./followRoute";
+import profileRouter from "./profileRoute";
 
 const apiRouter = Router();
 
@@ -26,5 +27,6 @@ apiRouter.use("/api/v1/userReport", userReportRouter);
 apiRouter.use("/api/v1/postReport", postReportRouter);
 apiRouter.use("/api/v1/commentReport", commentReportRouter);
 apiRouter.use("/api/v1/follow", followRouter);
+apiRouter.use("/api/v1/profile", profileRouter);
 
 export default apiRouter;

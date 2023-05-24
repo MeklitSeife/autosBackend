@@ -14,11 +14,27 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Organization_recommendation.init({
-    organization_name: DataTypes.STRING,
-    address: DataTypes.STRING,
-    contact: DataTypes.STRING,
-    description: DataTypes.STRING,
-    cover_image: DataTypes.STRING
+     id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    organization_name:  {
+      type: DataTypes.STRING,
+      allowNull: false
+        } ,
+    address: {
+      type: DataTypes.STRING,
+      allowNull: false
+        } ,
+    contact:  {
+      type: DataTypes.STRING,
+      allowNull: false
+        } ,
+    description:  {
+      type: DataTypes.STRING,
+      allowNull: false
+        } ,
   }, {
     sequelize,
     modelName: 'Organization_recommendation',

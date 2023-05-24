@@ -9,14 +9,13 @@ module.exports = {
         primaryKey: true,
         type: DataTypes.INTEGER
       },
-      no: {
-        type: DataTypes.INTEGER
+      number: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
       },
       description: {
-        type: DataTypes.STRING
-      },
-      cover_image: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

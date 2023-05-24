@@ -3,33 +3,34 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Symptom extends Model {
+  class Following extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate({User}) {
       // define association here
+      this.belongsTo(User, {  foreignKey: "followed_user_id", as: "following"});
     }
   }
-  Symptom.init({
+  Following.init({
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    number:{
-      type: DataTypes.INTEGER,
-      autoIncrement:true
-    } ,
-    discription: {
-      type: DataTypes.STRING,
-      allowNull: false
-        } ,
+    user_id:{
+      type: DataTypes.UUID,
+      allowNull:false
+    },
+    followed_user_id:{
+      type: DataTypes.UUID,
+      allowNull:false
+    },
   }, {
     sequelize,
-    modelName: 'Symptom',
+    modelName: 'Following',
   });
-  return Symptom;
+  return Following;
 };

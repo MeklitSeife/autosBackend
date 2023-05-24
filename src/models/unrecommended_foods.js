@@ -14,9 +14,19 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Unrecommended_foods.init({
-    number: DataTypes.INTEGER,
-    discription: DataTypes.STRING,
-    cover_image: DataTypes.STRING
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    number:{
+      type: DataTypes.INTEGER,
+      autoIncrement:true
+    } ,
+    discription: {
+      type: DataTypes.STRING,
+      allowNull: false
+        } ,
   }, {
     sequelize,
     modelName: 'Unrecommended_foods',

@@ -4,25 +4,26 @@ module.exports = {
   async up(queryInterface, DataTypes) {
     await queryInterface.createTable('Organization_recommendations', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.UUID,        
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
       },
       organization_name: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull:false
       },
       address: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull:false
       },
       contact: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull:false
       },
       description: {
-        type: DataTypes.STRING
-      },
-      cover_image: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull:false
       },
       createdAt: {
         allowNull: false,

@@ -116,7 +116,7 @@ var deleteMyComment = catchAsync(async (req, res, next) => {
     });
 
 //read all comments given for a specific post
-var readOnePostOfUserWithComment = catchAsync(async (req, res, next) => {
+var readAllCommentsOfOnePost = catchAsync(async (req, res, next) => {
 
   const postRead = await Post.findOne({
     
@@ -169,7 +169,7 @@ module.exports = {
     updateComment:updateComment,
     deleteMyComment:deleteMyComment,
     readMyOneComment:readMyOneComment,
-    readOnePostOfUserWithComment:readOnePostOfUserWithComment,
+    readAllCommentsOfOnePost:readAllCommentsOfOnePost,
 };
 
 

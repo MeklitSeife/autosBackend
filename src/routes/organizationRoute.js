@@ -5,7 +5,7 @@ import { validate } from "../middlewares/validators/organizationValidate";
 
 const organizationRouter = Router();
 organizationRouter.post("/", verifyToken,validate('createOrganizationProfile'),organizationProfileController.createOrganizationProfile);
-organizationRouter.get("/readMyOrganizationProfile",verifyToken,organizationProfileController.readOrganizationProfile);
+organizationRouter.get("/readMyProfile",verifyToken,organizationProfileController.readOrganizationProfile);
 organizationRouter.post("/readOrganizationProfile",validate('readOrganizationProfile'),organizationProfileController.readOrganizationProfileByOthers);
 organizationRouter.put("/updateOrganizationProfile",verifyToken, validate('updateOrganizationProfile'), organizationProfileController.updateOrganizationProfile);
 organizationRouter.put("/updateOrganizationLisence",verifyToken, validate('updateOrganizationLisence'), organizationProfileController.updateOrganizationLisence);

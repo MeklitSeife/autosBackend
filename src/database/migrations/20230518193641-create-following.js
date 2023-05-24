@@ -2,31 +2,19 @@
 /** @type {import('DataTypes-cli').Migration} */
 module.exports = {
   async up(queryInterface, DataTypes) {
-    await queryInterface.createTable('Doctor_recommendations', {
+    await queryInterface.createTable('Followings', {
       id: {
         primaryKey: true,
         type: DataTypes.UUID,        
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
       },
-      name: {
-        type: DataTypes.STRING,
+      user_id: {
+        type: DataTypes.UUID,
         allowNull:false
       },
-      gender: {
-        type: DataTypes.ENUM("Female","Male","Rather not to mention"),
-        allowNull:false
-      },
-      work_place: {
-        type: DataTypes.STRING,
-        allowNull:false
-      },
-      contact: {
-        type: DataTypes.STRING,
-        allowNull:false
-      },
-      experience:{
-        type: DataTypes.STRING,
+      followed_user_id: {
+        type: DataTypes.UUID,
         allowNull:false
       },
       createdAt: {
@@ -40,6 +28,6 @@ module.exports = {
     });
   },
   async down(queryInterface, DataTypes) {
-    await queryInterface.dropTable('Doctor_recommendations');
+    await queryInterface.dropTable('Followings');
   }
 };
